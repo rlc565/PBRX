@@ -38,11 +38,12 @@ def get_totals(labels, pred):
     return tot
 
 def tensorflow_ml(training_data, test_data, num_inputs):
-    # takes training dataset of a dataframe of peaks data
+    ''' Use a neural network to find if heartbeats are normal or abnormal with normal encodes as 0 and
+        abnormal encoded as 1.
+    '''
     dataset = format_input(training_data, num_inputs)
     data = dataset.drop(labels='labels', axis=1)
     labels = dataset['labels']
-    print(data.shape)
 
     test_dataset = format_input(test_data, num_inputs)
     test_data = test_dataset.drop(labels='labels', axis=1)
@@ -52,8 +53,9 @@ def tensorflow_ml(training_data, test_data, num_inputs):
     test_data = np.array(test_data)
 
     model = tf.keras.Sequential([
-      #normalise,
       tf.keras.layers.Dense(135, activation='relu'),
+      tf.keras.layers.Dense(90, activation='relu'),
+      tf.keras.layers.Dense(60, activation='relu'),
       tf.keras.layers.Dense(2)
     ])
 
@@ -61,7 +63,7 @@ def tensorflow_ml(training_data, test_data, num_inputs):
                     optimizer =tf.optimizers.Adam(learning_rate=0.001),
                     metrics=['accuracy'])
 
-    model.fit(data, labels, epochs=10)
+    model.fit(data, labels, epochs=20)
 
     print(model.summary())
 

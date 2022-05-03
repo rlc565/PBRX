@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 import peakdetection
 import nn
 
-#plot 'C:\Users\rebec\OneDrive\Documents\uni\PBRX\code\samples.csv' using 0:1
-
 NUM_INPUTS = 150 # number of data points given to neural network
 NUM_SAMPLES = 71 # number of samples taken from each class
 MAX_DIFF = 10 # maximum difference between found peak and true peak to be used as input sample
@@ -24,7 +22,7 @@ class AnnotatedDataset:
 def get_datasets(script_file):
     """Get datasets from script file and returns a dictionary containing the filename along with a pandas DataFrame
     containing the files data.
-    'Elapsed time'  'MLII'    'V5'"""
+    """
     datasets = {}
     if not os.path.exists(script_file):
         raise FileNotFoundError(
@@ -51,6 +49,9 @@ def get_datasets(script_file):
     return datasets
 
 def segment(dataset, peaks):
+    ''' Split data around the R-peak with NUM_INPUTS datapoints either side of each of the peaks
+    indexed in peaks and returns a list of tuples of the peak and the quivalent annotation.
+    '''
     data = []
     labels = []
     for i in range(2, len(peaks)-1):
@@ -72,8 +73,6 @@ def segment(dataset, peaks):
 def run_tool():
     datasets = get_datasets("script.txt")
 
-    #x, fdata = peakdetection.pan_tompkins_beat_detection(datasets['100excel'].data.head(30000))
-
     x, y = generate_data(datasets)
 
     training_data = x[:int(NUM_SAMPLES*0.8)] + y[:int(NUM_SAMPLES*0.8)]
@@ -83,16 +82,10 @@ def run_tool():
 
     nn.tensorflow_ml(training_data, testing_data, NUM_INPUTS)
 
-    '''
-    data = []
-    for i in x:
-        data.append(i - 13)
-        #data.append(i + 114)
-    print(data)
-    '''
     plt.show()
 
 def generate_data(datasets):
+    ''' Get normal and abnormal peaks with the number of each given by NUM_SAMPLES.'''
     total_data = []
     normal_data = []
     abnormal_data = []
@@ -112,6 +105,7 @@ def generate_data(datasets):
     return normal_data, abnormal_data
 
 def plot_graph(data, title, xlabel="Index", ylabel="Frequency (Hz)"):
+    ''' Plot a heartbeat.'''
     _, ax2 = plt.subplots()
     if len(data) > 0:
         x = [float(x) for x in data]

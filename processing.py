@@ -3,7 +3,7 @@ import numpy as np
 from scipy import signal
 
 def bandpass(data, sample_rate, high, low, order=1):
-    """ Apply a Butterworth filter to data
+    """ Apply a Butterworth filter.
 
         params:
             data (pandas DataFrame) : list of ecg data
@@ -13,7 +13,7 @@ def bandpass(data, sample_rate, high, low, order=1):
             order (int) : order of Butterworth filter
 
         return:
-            filterdData (list)
+            filterd_data (list)
     """
     nyquist = 0.5 * sample_rate
     high = high / nyquist
@@ -23,6 +23,7 @@ def bandpass(data, sample_rate, high, low, order=1):
     return filterd_data
 
 def moving_window_integration(data, window_size):
+    ''' Apply moving window integration to the data.'''
     window_integration = []
     window_integration.append(data[0])
 
