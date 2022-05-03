@@ -29,7 +29,7 @@ def pan_tompkins_beat_detection(dataset, sample_rate=360, max_beat=0.08):
     missed = 0
 
     for i in range(2, len(window_integration)-1):
-        if window_integration[i-1] < window_integration[i] and window_integration[i] > window_integration[i+1]:
+        if window_integration[i-1] < window_integration[i] > window_integration[i+1]:
             peaks.append(i)
 
             if window_integration[i] > threshold1 and (i - signal_peaks[-1]) > 0.3*sample_rate:
@@ -53,13 +53,12 @@ def pan_tompkins_beat_detection(dataset, sample_rate=360, max_beat=0.08):
                     noise_peaks.append(i)
                     npki = 0.125*window_integration[noise_peaks[-1]] + 0.875*npki
 
+                # find average RR rate of 8 most recent beats
+                if len(signal_peaks) > 8:
+                    missed = int(np.mean(np.diff(signal_peaks[-9:])) * 1.66)
+
                 threshold1 = npki + 0.25*(spki-npki)
                 threshold2 = 0.5 * threshold1
-
-                if len(signal_peaks)>8:
-                    rr = np.diff(signal_peaks[-9:])
-                    mean_rr = int(np.mean(rr))
-                    missed = int(1.66*mean_rr)
 
     signal_peaks = list(map(lambda x: x+int(window_size*2), signal_peaks))
     return signal_peaks[2:len(signal_peaks)-1], window_integration
