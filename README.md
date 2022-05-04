@@ -1,4 +1,4 @@
-# ECG Peak Detection and Classifying Neural Network
+# ECG Peak Detection Algorithm and Classifying Neural Network
 
 ## Intro
 
