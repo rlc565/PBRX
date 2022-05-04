@@ -92,6 +92,9 @@ def generate_data(datasets):
 
     for dataset in datasets:
         x, _ = peakdetection.pan_tompkins_beat_detection(datasets[dataset].data)
+
+        print(f'Peaks for sample {datasets[dataset].record}: {x}')
+        
         for peak in segment(datasets[dataset], x):
             total_data.append(peak)
 
